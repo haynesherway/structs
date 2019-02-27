@@ -131,17 +131,6 @@ func (s *Struct) FillMap(out map[string]interface{}) {
 			finalVal = val.Interface()
 		}
 
-		// if the value is a zero value and the field is marked as omitempty do
-        // not include
-        if tagOpts.Has("omitempty") {
-            zero := reflect.Zero(val.Type()).Interface()
-            current := val.Interface()
-
-            if reflect.DeepEqual(current, zero) {
-                continue
-            }
-        }
-
 		if tagOpts.Has("string") {
 			s, ok := val.Interface().(fmt.Stringer)
 			if ok {
@@ -151,9 +140,11 @@ func (s *Struct) FillMap(out map[string]interface{}) {
 		}
 
 		if isSubStruct && (tagOpts.Has("flatten")) {
+			if !IsStruct(finalVal) {
 			for k := range finalVal.(map[string]interface{}) {
 				out[k] = finalVal.(map[string]interface{})[k]
 			}
+		}
 		} else {
 			out[name] = finalVal
 		}
