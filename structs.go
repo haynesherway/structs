@@ -133,7 +133,7 @@ func (s *Struct) FillMap(out map[string]interface{}) {
 
 		// if there are only omited zero values in sub struct
 		// skip to avoid interface conversion panic
-		if isSubStruct && New(val).IsZero() {
+		if isSubStruct && New(finalVal).IsZero() {
 			continue
 		}
 
