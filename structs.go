@@ -131,6 +131,12 @@ func (s *Struct) FillMap(out map[string]interface{}) {
 			finalVal = val.Interface()
 		}
 
+		// if there are only omited zero values in sub struct
+		// skip to avoid interface conversion panic
+		if isSubStruct && New(val).IsZero() {
+			continue
+		}
+
 		if tagOpts.Has("string") {
 			s, ok := val.Interface().(fmt.Stringer)
 			if ok {
